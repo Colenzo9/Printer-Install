@@ -1,7 +1,7 @@
-﻿using System;
-using System.Printing;
+﻿using System.Printing;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Management;
 
 namespace Printer_Install
 {
@@ -14,31 +14,31 @@ namespace Printer_Install
             Size = new Size(300, 600);
             Font = new Font("Arial", FontHeight = 11, FontStyle.Bold);
 
-            var buttonLeft = new Button();
-            buttonLeft.Location = new Point(30, 523);
-            buttonLeft.Text = "Accept";
-            buttonLeft.Size = new Size(75, 25);
-            buttonLeft.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
-            buttonLeft.DialogResult = DialogResult.OK;
-            Controls.Add(buttonLeft);
+            var acceptButton = new Button();
+            acceptButton.Location = new Point(30, 523);
+            acceptButton.Text = "Accept";
+            acceptButton.Size = new Size(75, 25);
+            acceptButton.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
+            acceptButton.DialogResult = DialogResult.OK;
+            Controls.Add(acceptButton);
 
-            var buttonRight = new Button();
-            buttonRight.Location = new Point(175, 523);
-            buttonRight.Text = "Cancel";
-            buttonRight.Size = new Size(75, 25);
-            buttonRight.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
-            buttonRight.DialogResult = DialogResult.Cancel;
-            Controls.Add(buttonRight);
+            var cancelButton = new Button();
+            cancelButton.Location = new Point(175, 523);
+            cancelButton.Text = "Cancel";
+            cancelButton.Size = new Size(75, 25);
+            cancelButton.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
+            cancelButton.DialogResult = DialogResult.Cancel;
+            Controls.Add(cancelButton);
 
             var listBox = new ListBox();
             listBox.Name = "Shetberd";
             listBox.Size = new Size(285, 520);
             Controls.Add(listBox);
-
+            
             var server = new PrintServer(@"\\Print1");
             var queues = server.GetPrintQueues(new[] 
             {
-                EnumeratedPrintQueueTypes.Shared
+                EnumeratedPrintQueueTypes.PublishedInDirectoryServices
             });
 
             foreach (var printer in queues)
@@ -48,12 +48,16 @@ namespace Printer_Install
 
             var result = ShowDialog();
 
-            if (result == buttonLeft.DialogResult)
-            {
-                Close();
-            }
+            var Win32_Printer = new ManagementClass("Win32_Printer");
+            Win32_Printer.GetMethodParameters("AddPrinterConnection");
 
-            if (result == buttonRight.DialogResult)
+            if (result == acceptButton.DialogResult)
+            {
+                object selectedItem = listBox.SelectedItem;
+                Win32_Printer.InvokeMethod("AddPrinterConnection", (object[])selectedItem);
+            }
+            
+            if (result == cancelButton.DialogResult)
             {
                 Close();
             }
