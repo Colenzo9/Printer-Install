@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Management;
+using System;
 
 namespace Printer_Install
 {
@@ -45,16 +46,16 @@ namespace Printer_Install
             {
                 listBox.Items.Add(printer.FullName.Replace(@"\\Print1\", ""));
             }
-
+            
             var result = ShowDialog();
-
-            var Win32_Printer = new ManagementClass("Win32_Printer");
-            Win32_Printer.GetMethodParameters("AddPrinterConnection");
+            //ManagementClass Win32_Printer = new ManagementClass("Win32_Printer");
+            //ManagementBaseObject inputParam = Win32_Printer.GetMethodParameters("AddPrinterConnection");
+            //inputParam.SetPropertyValue("Name", listBox.SelectedItem);
 
             if (result == acceptButton.DialogResult)
             {
-                object selectedItem = listBox.SelectedItem;
-                Win32_Printer.InvokeMethod("AddPrinterConnection", (object[])selectedItem);
+                Close();
+                //_ = Win32_Printer.InvokeMethod("AddPrinterConnection", inputParam, null);
             }
             
             if (result == cancelButton.DialogResult)
