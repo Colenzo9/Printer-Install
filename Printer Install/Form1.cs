@@ -15,29 +15,30 @@ namespace Printer_Install
             Size = new Size(300, 600);
             Font = new Font("Arial", FontHeight = 11, FontStyle.Bold);
 
-            var acceptButton = new Button();
-            acceptButton.Location = new Point(30, 523);
-            acceptButton.Text = "Accept";
-            acceptButton.Size = new Size(75, 25);
-            acceptButton.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
-            acceptButton.DialogResult = DialogResult.OK;
-            Controls.Add(acceptButton);
+            var OK = new Button();
+            OK.Location = new Point(30, 523);
+            OK.Text = "OK";
+            OK.Size = new Size(75, 25);
+            OK.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
+            OK.DialogResult = DialogResult.OK;
+            Controls.Add(OK);
+            OK.Click += OK_Click;
 
-            var cancelButton = new Button();
-            cancelButton.Location = new Point(175, 523);
-            cancelButton.Text = "Cancel";
-            cancelButton.Size = new Size(75, 25);
-            cancelButton.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
-            cancelButton.DialogResult = DialogResult.Cancel;
-            Controls.Add(cancelButton);
+            var cancel = new Button();
+            cancel.Location = new Point(175, 523);
+            cancel.Text = "Cancel";
+            cancel.Size = new Size(75, 25);
+            cancel.Font = new Font("Arial", FontHeight = 9, FontStyle.Regular);
+            cancel.DialogResult = DialogResult.Cancel;
+            Controls.Add(cancel);
+            cancel.Click += Cancel_Click;
 
             var listBox = new ListBox();
-            listBox.Name = "Shetberd";
             listBox.Size = new Size(285, 520);
             Controls.Add(listBox);
             
             var server = new PrintServer(@"\\Print1");
-            var queues = server.GetPrintQueues(new[] 
+            var queues = server.GetPrintQueues(new[]
             {
                 EnumeratedPrintQueueTypes.PublishedInDirectoryServices
             });
@@ -46,22 +47,16 @@ namespace Printer_Install
             {
                 listBox.Items.Add(printer.FullName.Replace(@"\\Print1\", ""));
             }
-            
-            var result = ShowDialog();
-            //ManagementClass Win32_Printer = new ManagementClass("Win32_Printer");
-            //ManagementBaseObject inputParam = Win32_Printer.GetMethodParameters("AddPrinterConnection");
-            //inputParam.SetPropertyValue("Name", listBox.SelectedItem);
 
-            if (result == acceptButton.DialogResult)
-            {
-                Close();
-                //_ = Win32_Printer.InvokeMethod("AddPrinterConnection", inputParam, null);
-            }
-            
-            if (result == cancelButton.DialogResult)
-            {
-                Close();
-            }
+        }
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void OK_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
