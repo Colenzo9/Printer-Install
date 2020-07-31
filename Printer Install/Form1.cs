@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Management;
 using System;
+using System.Drawing.Printing;
 
 namespace Printer_Install
 {
@@ -48,15 +49,17 @@ namespace Printer_Install
                 listBox.Items.Add(printer.FullName.Replace(@"\\Print1\", ""));
             }
 
-        }
-        private void Cancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+            void Cancel_Click(object sender, EventArgs e)
+            {
+                Close();
+            }
 
-        private void OK_Click(object sender, EventArgs e)
-        {
-            Close();
+            void OK_Click(object sender, EventArgs e)
+            {
+                var printserv = new LocalPrintServer();
+                printserv.ConnectToPrintQueue(@"\\print1\ad-it");
+                Close();
+            }
         }
     }
 }
